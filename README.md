@@ -4,11 +4,12 @@ faceboo-sdk-python3
 I did not write a new facebook sdk, I just fixed something for [facebook-sdk](https://github.com/pythonforfacebook/facebook-sdk) which helps you run `facebook-sdk` in `Python3`
 
 #Example:
-  import facebook3 as fb
+  	
+  	import facebook3 as fb
 
-  token = fb.get_app_access_token('your_app_id', 'your_app_secret')
-  graph = fb.GraphAPI(token)
-  graph.get_object('/me')
+	token = fb.get_app_access_token('your_app_id', 'your_app_secret')
+	graph = fb.GraphAPI(token)
+	graph.get_object('/me')
 
 
 #License:
