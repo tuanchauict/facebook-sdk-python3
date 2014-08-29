@@ -9,7 +9,7 @@ I did not write a new facebook sdk, I just fixed something for [facebook-sdk](ht
 
 	token = fb.get_app_access_token('your_app_id', 'your_app_secret')
 	graph = fb.GraphAPI(token)
-	graph.get_object('/me')
+	graph.get_object('/object_id')
 
 
 #License:
