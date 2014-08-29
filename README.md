@@ -17,5 +17,5 @@ This library uses the [Apache License, version 2.0](http://www.apache.org/licens
 
 
 #Note: 
-I don't know how to create setup.py. So, you can copy [facebook3.py](https://github.com/tuanchauict/faceboo-sdk-python3/blob/master/facebook3.py) to your project or put it into `site-packages` folder
+I don't know how to create `setup.py`. So, you can copy [facebook3.py](https://github.com/tuanchauict/faceboo-sdk-python3/blob/master/facebook3.py) to your project or put it into `site-packages` folder
 
