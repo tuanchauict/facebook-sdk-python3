@@ -16,5 +16,6 @@ I did not write a new facebook sdk, I just fixed something for [facebook-sdk](ht
 This library uses the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). Please see the library's individual files for more information.
 
 
-PS: I don't know how to create setup.py. So, you can copy [facebook3.py](https://github.com/tuanchauict/faceboo-sdk-python3/blob/master/facebook3.py) to your project or put it into `site-packages` folder
+#Note: 
+I don't know how to create setup.py. So, you can copy [facebook3.py](https://github.com/tuanchauict/faceboo-sdk-python3/blob/master/facebook3.py) to your project or put it into `site-packages` folder
 
