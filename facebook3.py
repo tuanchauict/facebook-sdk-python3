@@ -210,7 +210,6 @@ class GraphAPI(object):
 		Return (content_type, body) ready for httplib.HTTP instance
 		"""
 
-		print('_encode_multipart_form')
 		BOUNDARY = '----------ThIs_Is_tHe_bouNdaRY_$'
 		CRLF = b'\r\n'
 		L = []
