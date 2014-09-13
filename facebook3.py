@@ -131,6 +131,7 @@ class GraphAPI(object):
 		extended permissions.
 		"""
 		assert self.access_token, "Write operations require an access token"
+
 		return self.request(parent_object + "/" + connection_name, post_args=data)
 
 	def put_wall_post(self, message, attachment={}, profile_id="me"):
@@ -188,6 +189,9 @@ class GraphAPI(object):
 		except urllib.error.HTTPError as e:
 			data = e.read()  # Facebook sends OAuth errors as 400, and urllib2 throws an exception, we want a GraphAPIError
 		try:
+			if isinstance(data, bytes):
+				data = data.decode('utf8')
+
 			response = _parse_json(data)
 			if response and response.get("error"):
 				raise GraphAPIError(response["error"].get("code", 1),
@@ -197,6 +201,7 @@ class GraphAPI(object):
 
 		return response
 
+	import base64
 	# based on: http://code.activestate.com/recipes/146306/
 	def _encode_multipart_form(self, fields):
 		"""Fields are a dict of form name-> value
@@ -204,36 +209,47 @@ class GraphAPI(object):
 		Other file-like objects might work and a fake name will be chosen.
 		Return (content_type, body) ready for httplib.HTTP instance
 		"""
+
+		print('_encode_multipart_form')
 		BOUNDARY = '----------ThIs_Is_tHe_bouNdaRY_$'
-		CRLF = '\r\n'
+		CRLF = b'\r\n'
 		L = []
 		for (key, value) in list(fields.items()):
 			logging.debug("Encoding %s, (%s)%s" % (key, type(value), value))
 			if not value:
 				continue
-			L.append('--' + BOUNDARY)
+			L.append(('--' + BOUNDARY).encode('ascii'))
 			if hasattr(value, 'read') and isinstance(value.read, collections.Callable):
 				filename = getattr(value, 'name', '%s.jpg' % key)
-				L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
-				L.append('Content-Type: image/jpeg')
+				content = 'Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename)
+
+				L.append(content.encode('ascii'))
+				L.append(b'Content-Type: image/jpeg')
 				value = value.read()
+				print(type(value))
 				logging.debug(type(value))
 			else:
-				L.append('Content-Disposition: form-data; name="%s"' % key)
-			L.append('')
+				L.append(('Content-Disposition: form-data; name="%s"' % key).encode('ascii'))
+			L.append(b'')
 			if isinstance(value, str):
+
 				logging.debug("Convert to ascii")
 				value = value.encode('ascii')
 			L.append(value)
-		L.append('--' + BOUNDARY + '--')
-		L.append('')
+
+			print(type(value), value)
+		L.append(('--' + BOUNDARY + '--').encode('ascii'))
+		L.append(b'')
+		# print('L: ', type(L))
+		for l in L:
+			print(type(l), l)
 		body = CRLF.join(L)
 		content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
 		return content_type, body
 
 	def fetch_url(self, url, post_args=None):
 		post_data = None if post_args is None else urllib.parse.urlencode(post_args)
-		file = urllib.request.urlopen(url, post_data)
+		file = urllib.request.urlopen(url, post_data.encode('ascii'))
 		try:
 			fileInfo = file.info()
 			if fileInfo.get_content_maintype() == 'text':
@@ -303,7 +319,6 @@ class GraphAPI(object):
 		try:
 			res = file.read()
 			if res:
-				print(res.decode('utf8'))
 				response = _parse_json(res.decode('utf8'))
 
 		finally:
