@@ -248,7 +248,11 @@ class GraphAPI(object):
 
 	def fetch_url(self, url, post_args=None):
 		post_data = None if post_args is None else urllib.parse.urlencode(post_args)
-		file = urllib.request.urlopen(url, post_data.encode('ascii'))
+		## Add validation for post_data to avoid post_data.encode() error ---
+		if post_data:
+                        file = urllib.request.urlopen(url, post_data.encode('ascii'))
+                else:
+                        file = urllib.request.urlopen(url)
 		try:
 			fileInfo = file.info()
 			if fileInfo.get_content_maintype() == 'text':
