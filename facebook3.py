@@ -27,9 +27,9 @@ usage of this module might look like this:
 
     user = facebook.get_user_from_cookie(self.request.cookies, key, secret)
     if user:
-        graph = facebook.GraphAPI(user["access_token"])
-        profile = graph.get_object("me")
-        friends = graph.get_connections("me", "friends")
+	graph = facebook.GraphAPI(user["access_token"])
+	profile = graph.get_object("me")
+	friends = graph.get_connections("me", "friends")
 
 """
 
@@ -195,7 +195,7 @@ class GraphAPI(object):
 			response = _parse_json(data)
 			if response and response.get("error"):
 				raise GraphAPIError(response["error"].get("code", 1),
-				                    response["error"]["message"])
+						    response["error"]["message"])
 		except ValueError:
 			response = data
 
@@ -250,9 +250,9 @@ class GraphAPI(object):
 		post_data = None if post_args is None else urllib.parse.urlencode(post_args)
 		## Add validation for post_data to avoid post_data.encode() error ---
 		if post_data:
-                        file = urllib.request.urlopen(url, post_data.encode('ascii'))
-                else:
-                        file = urllib.request.urlopen(url)
+			file = urllib.request.urlopen(url, post_data.encode('ascii'))
+		else:
+			file = urllib.request.urlopen(url)
 		try:
 			fileInfo = file.info()
 			if fileInfo.get_content_maintype() == 'text':
@@ -270,7 +270,7 @@ class GraphAPI(object):
 			file.close()
 		if response and isinstance(response, dict) and response.get("error"):
 			raise GraphAPIError(response["error"]["type"],
-			                    response["error"]["message"])
+					    response["error"]["message"])
 		return response
 
 	def request(self, path, args=None, post_args=None):
@@ -318,7 +318,7 @@ class GraphAPI(object):
 			args["format"] = "json-strings"
 		post_data = None if post_args is None else urllib.parse.urlencode(post_args)
 		file = urllib.request.urlopen("https://api.facebook.com/method/" + path + "?" +
-		                              urllib.parse.urlencode(args), post_data)
+					      urllib.parse.urlencode(args), post_data)
 		try:
 			res = file.read()
 			if res:
@@ -328,7 +328,7 @@ class GraphAPI(object):
 			file.close()
 		if response and response.get("error"):
 			raise GraphAPIError(response["error"]["type"],
-			                    response["error"]["message"])
+					    response["error"]["message"])
 		return response
 
 
@@ -351,7 +351,7 @@ class GraphAPI(object):
 		args["query"] = query
 		args["format"] = "json"
 		file = urllib.request.urlopen("https://api.facebook.com/method/fql.query?" +
-		                              urllib.parse.urlencode(args), post_data)
+					      urllib.parse.urlencode(args), post_data)
 		try:
 			content = file.read()
 			response = _parse_json(content)
@@ -391,7 +391,7 @@ def get_user_from_cookie(cookies, app_id, app_secret):
 	if not cookie: return None
 	args = dict((k, v[-1]) for k, v in list(cgi.parse_qs(cookie.strip('"')).items()))
 	payload = "".join(k + "=" + args[k] for k in sorted(args.keys())
-	                  if k != "sig")
+			  if k != "sig")
 	sig = hashlib.md5(payload + app_secret).hexdigest()
 	expires = int(args["expires"])
 	if sig == args.get("sig") and (expires == 0 or time.time() < expires):
@@ -448,11 +448,11 @@ def get_app_access_token(application_id, application_secret):
 	"""
 	# Get an app access token
 	args = {'grant_type': 'client_credentials',
-	        'client_id': application_id,
-	        'client_secret': application_secret}
+		'client_id': application_id,
+		'client_secret': application_secret}
 
 	file = urllib.request.urlopen("https://graph.facebook.com/oauth/access_token?" +
-	                              urllib.parse.urlencode(args))
+				      urllib.parse.urlencode(args))
 
 	try:
 		result = file.read()
